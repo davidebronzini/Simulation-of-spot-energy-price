@@ -377,6 +377,8 @@ for i in range(len(future_df)):
     if np.sum(idx) == 1:
         fexp[i] = E_FUT_Q[idx][0]
 
+future_df["theor. F"]=fexp
+
 plt.figure(figsize=(12,6))
 
 plt.plot(
@@ -400,12 +402,32 @@ plt.grid(True)
 
 plt.show()
 
+#exlude points where market price futures are not avaible yet or the future product 
+# are expired with respect to the chosen date for costruct the forward curve
 
+mask_for_fig = (
+    (future_df["EXPIRATION"] >= "2026-04") &
+    (future_df["EXPIRATION"] <= "2026-10")
+)
+plt.figure(figsize=(12,6))
 
+plt.plot(
+    future_df["EXPIRATION"][mask_for_fig],
+    future_df["F"].values[mask_for_fig],
+    label="Market Futures"
+)
 
+plt.plot(
+    future_df["EXPIRATION"][mask_for_fig],
+    fexp[mask_for_fig],
+    '*r',
+    label="Risk-neutral expected futures"
+)
 
-plt.plot(date_sim, theta_sim)
+plt.xlabel("Expiry")
+plt.ylabel("Price")
+plt.title("Market Futures vs Risk-neutral Simulation")
+plt.legend()
+plt.grid(True)
+
 plt.show()
-
-error=fexp-future_df["F"]
-print(error)
