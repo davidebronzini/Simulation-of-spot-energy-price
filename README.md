@@ -2,7 +2,7 @@
 
 This project models the Italian electricity spot price (PUN) using a mean-reverting jump-diffusion model with a deterministic seasonal component. Although the model is calibrated to the Italian electricity market, the methodology can be generalized to other energy spot markets.
 
-The main objective is to replicate and extend the methodology presented in Simulating Electricity Prices with Mean-Reversion and Jump-Diffusion.
+The main objective is to replicate and extend the methodology presented in Simulating Electricity Prices with Mean-Reversion and Jump-Diffusion   work.
 
 ## Dataset
 PUN spot prices: daily Italian electricity spot prices from 01/01/2020 to 13/04/2026, downloaded from the Gestore dei Mercati Energetici (GME).
