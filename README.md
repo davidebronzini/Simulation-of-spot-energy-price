@@ -22,3 +22,4 @@ Futures prices: daily prices of monthly Italian electricity futures from 01/07/2
 ## Results
 
 The model is able to consistently reproduce the observed market futures prices, as shown in the figure below.
+![Market Futures vs Theoretical Futures](images/results.png)
