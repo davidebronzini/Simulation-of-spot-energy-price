@@ -35,14 +35,16 @@ df["x2"] = np.cos(2 * np.pi * df["t"])
 df["x3"] = np.sin(4 * np.pi * df["t"])
 df["x4"] = np.cos(4 * np.pi * df["t"])
 
-predictors = MS(["x1", "x2", "x3", "x4"])
+
+predictors = MS(["x1","x2","x3","x4"])
+
 print(predictors)
 X=predictors.fit_transform(df)
 y=df["lnP"]
 model=sm.OLS(y,X)
 model=model.fit()
 print(model.params)
-#4 compute seasonality manually or with .predict() method
+#3 compute seasonality manually or with .predict() method
 season_params=model.params.values
 theta=X.values @ season_params
 print(theta)
@@ -57,7 +59,7 @@ plt.show()
 # Deseasonalized series
 df["lnP-season"] = df["lnP"] - df["Theta"]
 
-# Create figure with 2 subplots
+
 fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(12,8))
 
 # First subplot: original vs seasonality
@@ -74,7 +76,7 @@ axes[1].legend()
 plt.tight_layout()
 plt.show()
 
-#5 discretization 
+#5 discretization euler
 dt=1/365.25
 Xt=df["lnP-season"].iloc[1:].to_numpy()
 Xt_prev=df["lnP-season"].iloc[:-1].to_numpy()
@@ -208,18 +210,17 @@ print(future_df)
 future_df = future_df[future_df["DATE"] == fwdcurve_date]
 
 print(future_df)
-#compute exaxt T to decide the simulation end
 
-# prendo solo futures disponibili
+# takes only available futures
 available = future_df.dropna(subset=["F"])
 
-# ultimo contratto disponibile
+# last available contract
 last_contract = available["EXPIRATION"].max()
 
-# ultimo giorno del mese del contratto
+# last day of last contract
 simulation_end = last_contract + MonthEnd(0)
 
-# numero periodi simulazione
+# 
 T = (simulation_end - fwdcurve_date).days + 1
 
 print("Forward curve date:", fwdcurve_date)
@@ -317,7 +318,7 @@ tz_cl=tz[new_mask]
 
 b=-np.log(F_daily_cl[1:]/E_FUT_cl[1:])/(sigma*np.exp(-k*tz_cl[1:]))
 
-delta=(1/ k)*(np.exp(k*tz_cl[1:]))-(np.exp(k*tz_cl[0:-1]))
+delta=(1/k)*(np.exp(k*tz_cl[1:])-np.exp(k*tz_cl[:-1]))
 
 A=np.tril(np.tile(delta,(delta.size, 1)))
 
@@ -401,36 +402,7 @@ plt.show()
 
 
 
-print(E_FUT[:10])
-print(E_FUT_Q[:10])
 
-print(F_daily_cl)
-print(E_FUT_cl)
-
-print(
-    F_daily_cl / E_FUT_cl
-)
-
-
-df_check = pd.DataFrame({
-    "Date": date_sim,
-    "MeanPrice": E_FUT_Q
-})
-
-monthly = (
-    df_check
-    .set_index("Date")
-    .resample("MS")
-    .mean()
-)
-
-print(monthly)
-print(future_df["EXPIRATION"])
-
-print(mu)
-print(k)
-print(mu/k)
-print(Xt[-1])
 
 plt.plot(date_sim, theta_sim)
 plt.show()
